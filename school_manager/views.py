@@ -13,7 +13,9 @@ class SchoolViewSet(viewsets.ModelViewSet):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
-class StudentListViewSet(viewsets.ModelViewSet):
+class StudentsListViewSet(viewsets.ModelViewSet):
+    serializer_class = StudentSerializer
     def get_queryset(self):
-        return Student.objects.filter(school = self.
- 
+        return Student.objects.filter(school = self.kwargs['school_pk'])
+    def perform_create(self, serializer):
+        serializer.save(school= self.kwargs['school_pk'])
