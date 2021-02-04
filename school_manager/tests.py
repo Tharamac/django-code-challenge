@@ -184,6 +184,24 @@ class StudentTest(APITestCase):
         self.assertEqual(post_response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(post_response.data['school'][0].__str__(), "This school is already full.")
 
+    def test_POST_in_full_school_on_nested_route(self):
+        data = {
+            "first_name" : "Tharasumaichikosorai",
+            "last_name" :  "Takahashimakotomikan",
+            "school" : self.school_id
+        }
+        url = self.school_url + str(self.school_id) + self.student_url
+        # Test POST request 
+        post_response = self.client.post(url, data, format='json')
+        data = {
+            "first_name" : "Childe",
+            "last_name" :  "Tartaglia",
+            "school" : self.school_id
+        }
+        post_response = self.client.post(url, data, format='json')
+        self.assertEqual(post_response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(post_response.data['school'][0].__str__(), "This school is already full.")
+
     def test_POST_response_but_input_over_20_characters(self):
         data = {
             "first_name" : "Tharasumaichikosoraima",
@@ -306,3 +324,32 @@ class StudentTest(APITestCase):
         get_response = self.client.get(self.student_url +  str(post_response_data['id']) +'/')
         self.assertEqual(get_response.status_code,status.HTTP_404_NOT_FOUND)      
 
+class NestedRouteTest(APITestCase):
+    student_url = '/students/'
+    school_url = '/schools/'
+    
+    def test_GET_all_students(self):
+        school_data = {
+            "name" : "Nested",
+            "max_students" : 15
+        }
+        # Test POST request on school data.
+        school_post_response = self.client.post(self.school_url, school_data, format='json')
+        school_id = school_post_response.data['id']
+        student1_data = {
+            "first_name" : "Tharasumaichikosorai",
+            "last_name" :  "Takahashimakotomikan",
+            "school" : school_id
+        }
+        # Test POST request 
+        student1_post_response = self.client.post(self.student_url,student1_data, format='json')
+        student2_data = {
+            "first_name" : "Childe",
+            "last_name" :  "Tartaglia",
+            "school" : school_id
+        }
+        student2_post_response = self.client.post(self.student_url, student2_data, format='json')
+        self.school_id = school_post_response.data['id']
+        url = self.school_url + str(school_id) + self.student_url
+        get_response = self.client.get(url)
+        self.assertEqual(len(get_response.data), 2)
