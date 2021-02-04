@@ -1,6 +1,5 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from school_manager.models import Student, School
+from school_manager.models import School,Student 
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
