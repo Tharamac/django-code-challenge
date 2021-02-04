@@ -14,4 +14,5 @@ by Tharathorn Wangthammang
 Reference:
 - ModelViewSet: https://www.django-rest-framework.org/api-guide/viewsets/#modelviewset \
 - ModelSerializer: https://www.django-rest-framework.org/api-guide/serializers/#modelserializer \
+- DRF Testing: https://www.django-rest-framework.org/api-guide/testing/
 - drf-nested-routers: https://github.com/alanjds/drf-nested-routers
